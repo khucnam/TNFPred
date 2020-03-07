@@ -1,4 +1,4 @@
-# TNFPred
+# TNFPred: Identifying tumor necrosis factors using hybrid features based on word embeddings
 TNFPred
 This is the public site for the paper under submission named: "TNFPred: Identifying tumor necrosis factors using hybrid features based on word embeddings"
 
