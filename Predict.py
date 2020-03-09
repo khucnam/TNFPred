@@ -5,6 +5,7 @@ import pickle
 from sklearn.externals import joblib
 import sys
 
+
 def fastaToNgram(fastaSequenceFile, ngram):
     f=open(fastaSequenceFile,"r")
     lines=f.readlines()
@@ -80,17 +81,25 @@ def create_svm_input_from_dict(embedding_file, fasttext_input_sequence_dic, svm_
     f.close()
     
 
-def create_svm_input_from_one_seq(embedding_file, fasttext_input_sequence, svm_input_file):
+def create_svm_input_from_one_seq(embedding_file1, embedding_file2, fasttext_input_sequence1, fasttext_input_sequence2, svm_input_file):
+    word_int1 = create_word_vector(embedding_file1)
+    input_word_int1 = init(word_int1)
     f=open(svm_input_file,"w") #w: allow overwrite
-    word_int = create_word_vector(embedding_file)
-    input_word_int = init(word_int)
-    # f=open(svm_input_file,"w") #w: allow overwrite --> sai cho nay vi da open file o line 87
-    for ngram in fasttext_input_sequence.split():
-        count=count_word(fasttext_input_sequence[:-1].split(),ngram)
-        if word_int.get(ngram)!=None:
-            input_word_int[ngram]=[count*word_int.get(ngram)[0]]#dim1
-    for key in input_word_int.keys():
-        f.write(str('{:.3f}'.format(input_word_int.get(key)[0]))+", ")#dim 1, lay 3 chinh xac den 3 chu so
+    for ngram in fasttext_input_sequence1.split():
+        count=count_word(fasttext_input_sequence1[:-1].split(),ngram)
+        if word_int1.get(ngram)!=None:
+            input_word_int1[ngram]=[count*word_int1.get(ngram)[0]]#dim1
+    for key in input_word_int1.keys():
+        f.write(str('{:.3f}'.format(input_word_int1.get(key)[0]))+", ")#dim 1, lay 3 chinh xac den 3 chu so
+        
+    word_int2 = create_word_vector(embedding_file2)
+    input_word_int2 = init(word_int2)
+    for ngram in fasttext_input_sequence2.split():
+        count=count_word(fasttext_input_sequence2[:-1].split(),ngram)
+        if word_int2.get(ngram)!=None:
+            input_word_int2[ngram]=[count*word_int2.get(ngram)[0]]#dim1
+    for key in input_word_int2.keys():
+        f.write(str('{:.3f}'.format(input_word_int2.get(key)[0]))+", ")#dim 1, lay 3 chinh xac den 3 chu so
     
     f.write("\n")    
     f.close()
@@ -118,29 +127,35 @@ def run(svm_input_file, model_file):
 inputFile= sys.argv[1]
 outputFile="Result.csv" #w: allow overwrite
 print("input file ",inputFile)
+
+#ngram2
+fasttext_input_sequence_dic1=fastaToNgram("your_fasta_file.fasta",2)
 #ngram3
-fasttext_input_sequence_dic=fastaToNgram("your_fasta_file.fasta",3)
+fasttext_input_sequence_dic2=fastaToNgram("your_fasta_file.fasta",3)
 f=open(outputFile,"w")
-f.write("ProteinID,ComplexI,ComplexII,ComplexIII,ComplexIV,ComplexV\n")
+f.write("ProteinID,Probability\n")
 answerDict={}
 
-for proteinID in fasttext_input_sequence_dic.keys():
+
+for proteinID in fasttext_input_sequence_dic1.keys():
     f.write(proteinID+",")
-    fasttext_input_sequence=fasttext_input_sequence_dic.get(proteinID)
-    for cla in ["A","B","C","D","E"]:
-            svm_input_file="tmp//"+cla+"_"+proteinID+".csv"
-            embedding_file="fastText embedding vectors//fastText embedding vectors//dfSubword.embedding.train."+cla+".vec"
-            create_svm_input_from_one_seq(embedding_file, fasttext_input_sequence, svm_input_file)
-            model_file="Models//Models//"+cla+".pickle_model.pkl"
+    fasttext_input_sequence1=fasttext_input_sequence_dic1.get(proteinID)
+    fasttext_input_sequence2=fasttext_input_sequence_dic2.get(proteinID)
+    for cla in ["TNF"]:
+            svm_input_file="tmp\\"+cla+"_"+proteinID+".csv"
+            embedding_file1="fastText embedding vectors\\fastText embedding vectors\\ngram2.dfSubword.embedding.train.vec"
+            embedding_file2="fastText embedding vectors\\fastText embedding vectors\\ngram3.dfSubword.embedding.train.vec"
+            create_svm_input_from_one_seq(embedding_file1, embedding_file2, fasttext_input_sequence1, fasttext_input_sequence2, svm_input_file)
+            model_file="Model\\Model\\"+cla+".pickle_model.pkl"
             answerForOneClass = run(svm_input_file,model_file)
             f.write(str("{:.3f}".format(answerForOneClass))+",")
     f.write("\n")
+f.close()
 
 #delete temporary files    
 for filename in os.listdir("tmp"):
-    os.remove("tmp//"+filename)
+    os.remove("tmp\\"+filename)
     
-f.close()
 
 
 
