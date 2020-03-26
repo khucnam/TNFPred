@@ -111,6 +111,8 @@ def labelToOneHot(label):# 0--> [1 0], 1 --> [0 1]
     return label
 
 
+
+	
 def run(svm_input_file, model_file):
     dataset = pd.read_csv(svm_input_file, header=None)
     X_test = dataset.iloc[:, 0:-1].values
@@ -123,15 +125,18 @@ def run(svm_input_file, model_file):
     y_pred = classifier.predict_proba(X_test)
     return y_pred[0][1] #all the second values
 
+	
+if not(os.path.exists("tmp")):
+	os.mkdir("tmp")
 
 inputFile= sys.argv[1]
 outputFile="Result.csv" #w: allow overwrite
 print("input file ",inputFile)
 
 #ngram2
-fasttext_input_sequence_dic1=fastaToNgram("your_fasta_file.fasta",2)
+fasttext_input_sequence_dic1=fastaToNgram(inputFile,2)
 #ngram3
-fasttext_input_sequence_dic2=fastaToNgram("your_fasta_file.fasta",3)
+fasttext_input_sequence_dic2=fastaToNgram(inputFile,3)
 f=open(outputFile,"w")
 f.write("ProteinID,Probability\n")
 answerDict={}

@@ -7,12 +7,19 @@ Cytokines is a varied group of polypeptides, usually linked to inflammation and 
 
 Motivated by recent remarkable achievements in NLP using word embeddings, in this study, we tried to use NLP technique for extracting features. We transferred the protein sequences into “protein sentences” comprised of composing biological words from which word vectors were created. Next, we trained the Fast Text model to created word embeddings on which final word embedding-based features were generated. Finally, we employed some advanced machine learning algorithms for classification. 
 
+LIBRARY REQUIREMENTS
+	We will need to install some basic packages to run the programs as followed:
+		git version 2.15.1.windows.2
+		python 3.6.5
+		numpy 1.14.3
+		pandas 0.23.0
+		sklearn 0.20.2
 
 
 INSTRUCTION:
 
-Using git bash to clone all the required files in "YOUR FOLDER" folder git clone https://github.com/khucnam/TNFPred
+1. Using git bash to clone all the required files in "YOUR FOLDER" folder git clone https://github.com/khucnam/TNFPred
 
-python Predict.py your_fasta_file.fasta ("your_fasta_file.fasta" file contains the sequences you want to classify. Please see the "sample.fasta" as an example.)
+2. python Predict.py your_fasta_file.fasta ("your_fasta_file.fasta" file contains the sequences you want to classify. Please see the "sample.fasta" as an example.)
 
-Running the Predict.py script will generate the Result.csv file. In Result.csv file, there are 2 columms: first one contains the protein ID, the next column contaisn a probability that a cytokine sequence is a TNF.
+----> Running the Predict.py script will generate the Result.csv file. In Result.csv file, there are 2 columms: first one contains the protein ID, the next column contaisn a probability that a cytokine sequence is a TNF.
