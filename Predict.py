@@ -162,5 +162,6 @@ for filename in os.listdir("tmp"):
     os.remove("tmp\\"+filename)
     
 
+print("Thank you for using TNFPred!!! Please check the prediction results in Result.csv file")
 
 
